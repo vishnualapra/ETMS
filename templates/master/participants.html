@@ -1,0 +1,207 @@
+{% extends 'master/base.html' %}
+{% load static %}
+{% block datatablecss %}<!-- Data table css -->
+	<link href="{% static 'assets/plugins/datatable/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div class="page-header mt-0 shadow p-3">
+								<ol class="breadcrumb mb-sm-0">
+									<li class="breadcrumb-item"><a href="/master/dashboard/">Dashboard</a></li>
+                       
+                                    <li class="breadcrumb-item active" aria-current="page">Participants</li>
+								</ol>
+								<div class="btn-group mb-0">
+									<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
+									
+								</div>
+							</div>
+
+									<div class="row">
+								<div class="col-md-12">
+									<div class="card shadow">
+										<div class="card-header">
+											<h2 style="float: left;" class="mb-0">Participants</h2>
+                                             {% comment %} <a style="float: right;" href="#" class="btn btn-primary btn-square mt-1 mb-1" data-toggle="modal" data-target="#addcate">Add New</a> {% endcomment %}
+                                            <div class="modal fade" id="addcate" tabindex="-1" role="dialog" aria-labelledby="modal-form" style="display: none;" aria-hidden="true">
+												<div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+													<div class="modal-content">
+														<div class="modal-body p-0">
+															<div class="card bg-primary shadow border-0 mb-0">
+
+																<div class="card-body px-lg-5 py-lg-5">
+																	<div class="text-center text-white mb-4 h2">
+																		Add Files
+                                                                        
+																	</div>
+																	<form method="post"  enctype="multipart/form-data">{% csrf_token %}
+																		<div class="form-group mb-3">
+																			<div class="input-group input-group-alternative">
+																				<div class="input-group-prepend">
+																					<span class="input-group-text"><i class="ni ni-badge"></i></span>
+																				</div>
+																				<input class="form-control" placeholder="File Title" type="text" name="ftitle" required>
+																			</div>
+																		</div>
+																		<div class="form-group mb-3">
+																			<div class="input-group input-group-alternative">
+																				<div class="input-group-prepend">
+																					<span class="input-group-text"><i class="ni ni-badge"></i></span>
+																				</div>
+																				<input class="form-control" placeholder="File Title" type="file" name="fle" required>
+																			</div>
+																		</div>
+                                                                         
+																		
+																		<div class="text-center">
+																			<button data-dismiss="modal" class="btn btn-white my-4">Cancel</button><button type="submit" class="btn btn-white my-4">Save</button>
+																		</div>
+																	</form>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="card-body">
+											<div class="table-responsive">
+												<table id="example" class="table table-striped table-bordered w-100 text-nowrap">
+													<thead>
+                                                    <th class="wd-15p">Sl.No</th>
+															<th class="wd-15p">Full Name</th>
+															<th class="wd-15p">Email</th>
+															<th class="wd-15p">Login Time</th>
+															<th class="wd-15p">Last Update</th>
+															<th class="wd-15p">File Status</th>
+                                                            <th class="wd-15p">Survey Status</th>
+                                                            <th class="wd-15p">View Details</th>
+
+													</thead>
+													<tbody>
+                                                    {% for i in files %}
+														<tr>
+                                                        <td>{{ forloop.counter }}</td>
+															<td>{{ i.full_name }}</td>
+															<td>{{ i.email }}</td>
+															<td>{{ i.created_at }}</td>
+															<td>{{ i.updated_at }}</td>
+															<td>{% if i.is_files_downloaded is True %}<b style="color:green;">Download Completed</b>
+															{% else %}<b style="color:red;">Download not Completed</b>
+															{% endif %}</td>
+															<td>{% if i.is_completed is True %}<b style="color:green;">Survey Completed</b>
+															{% else %}<b style="color:red;">Survey not Completed</b>
+															{% endif %}</td>
+															<td>
+															{% if i.is_completed is True %} <a href="/master/participants/{{ i.id }}/" target="_blank" class="btn btn-danger  btn-square mt-1 mb-1" style="color:#fff;">View</a> {% else %}
+
+                                                                <a  class="btn btn-danger  btn-square mt-1 mb-1" style="color:#fff;" title="No data Available" hidden>View</a>{% endif %}
+                                                               
+                                                            </td>
+
+														</tr>
+
+                                                    {% endfor %}
+
+													</tbody>
+												</table>
+											</div>
+										</div>
+                                    </div></div></div>
+
+        <script>
+        sucdlt();
+        </script>
+
+
+{% endblock %}
+
+
+{% block datatablejs %}
+    <!-- Data table -->
+	<script src="{% static 'assets/plugins/datatable/jquery.dataTables.min.js' %}"></script>
+	<script src="{% static 'assets/plugins/datatable/dataTables.bootstrap4.min.js' %}"></script>
+
+<script>
+		$(function(e) {
+			$('#example').DataTable();
+
+			var table = $('#example1').DataTable();
+
+			$('#example2').DataTable( {
+				"scrollY":        "200px",
+				"scrollCollapse": true,
+				"paging":         false
+			});
+		} );
+
+	</script>
+    <script>
+    function alrt(frm){
+		swal({
+			title: "Are you sure?",
+			text: "You will not be able to recover this imaginary file!",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonClass: "btn-danger",
+			confirmButtonText: "Yes, delete it!",
+			cancelButtonText: "No, cancel plx!",
+			closeOnConfirm: false,
+			closeOnCancel: true
+		}, function(isConfirm) {
+			if (isConfirm) {
+			    var id = 'dlt'+ frm
+			    forms = document.getElementById(id).submit()
+
+			}
+
+		});
+
+    }
+
+    </script>
+
+    <script>
+    function sucdlt() {
+        var v1 = document.getElementById('msg').value;
+
+        if(v1==""){
+
+        } else if(v1=="sucdlt"){
+
+            swal('Success!', 'File has been succesfully Deleted', 'success');
+        }
+        else if (v1=="failed"){
+            swal({
+			type: 'error',
+			title: 'Oops...',
+			text: 'Something went wrong!',
+			footer: '<a href>Why do I have this issue?</a>'
+		})
+        }
+        else if(v1=='sucadd'){
+            swal('Success!', 'File Added Successfully', 'success');
+        }
+        else if(v1=="sucdact"){
+            swal('Success!', 'Level Disabled Successfully', 'success');
+        }
+         else if(v1=="sucact"){
+            swal('Success!', 'Level Actived Successfully', 'success');
+        }
+        else if(v1=="sucedit"){
+            swal('Success!', 'Level Edited Successfully', 'success');
+        }
+
+		else if (v1=="not_dlt"){
+            swal({
+			type: 'error',
+			title: 'Oops...',
+			text: 'File cant not be deleted. it is in use',
+			footer: 'File cant not be deleted. it is in use',
+		})
+        }
+
+    }
+    </script>
+    {% endblock %}
