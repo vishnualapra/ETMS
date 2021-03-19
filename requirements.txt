@@ -9,7 +9,7 @@ django-cors-headers==3.2.1
 django-filter==2.2.0
 django-mathfilters==0.4.0
 django-session-timeout==0.0.3
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 flake8==2.4.1
 idna==2.8
 isort==4.3.21
